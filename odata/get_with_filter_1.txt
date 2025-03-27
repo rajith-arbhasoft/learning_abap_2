@@ -1,0 +1,34 @@
+  method SOHEADERSET_GET_ENTITYSET.
+
+    data :r_erdat type RANGE OF vbak-erdat,"sing-I/E options-LE/GE... ,LB,UB"
+          ls_erdat like line of r_erdat.
+
+    data:ls_filter_selection_options TYPE /IWBEP/S_MGW_SELECT_OPTION, "type of the it_filter_select_opotions"
+          lt_selection_options type /IWBEP/T_COD_SELECT_OPTIONS, "type of the nested table"
+          ls_selection_options type /IWBEP/S_COD_SELECT_OPTION.   "type of the line of the nested table"
+
+    read table it_filter_select_options into ls_filter_selection_options with key property = 'Erdat'.
+
+    if ls_filter_selection_options-property is not INITIAL.
+      lt_selection_options[] = ls_filter_selection_options-select_options[].
+    endif.
+
+    LOOP at lt_selection_options into ls_selection_options.
+      ls_erdat-sign =  ls_selection_options-sign.
+      ls_erdat-option = ls_selection_options-option.
+      ls_erdat-high = ls_selection_options-high.
+      ls_erdat-low = ls_selection_options-low.
+
+      append ls_erdat to r_erdat.
+      clear:ls_erdat,ls_selection_options.
+    ENDLOOP.
+
+
+
+    SELECT * FROM zovbak INTO CORRESPONDING FIELDS OF TABLE et_entityset where erdat in r_erdat. "et_entityset is an signature to export a table"
+
+  endmethod.
+
+*--------NOT PART OF CODE URI FOR THE END POINT-------------------
+
+*URI = /sap/opu/odata/SAP/ZKODATA2_SRV/SOHEADERSet?$filter=Erdat ge datetime'2001-01-01T00:00:00' and Erdat le datetime'2024-09-01T00:00:00'

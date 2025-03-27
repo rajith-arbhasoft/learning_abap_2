@@ -1,0 +1,10 @@
+  method SOHEADERSET_GET_ENTITYSET.
+    SELECT * FROM zovbak INTO CORRESPONDING FIELDS OF TABLE et_entityset.
+
+CALL METHOD /IWBEP/CL_MGW_DATA_UTIL=>paging
+  EXPORTING
+    is_paging = IS_PAGING            " paging structure
+  CHANGING
+    ct_data   = et_entityset
+  .
+  endmethod.

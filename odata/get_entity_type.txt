@@ -1,0 +1,22 @@
+  METHOD soheaderset_get_entity.
+
+    DATA:ls_key_tab TYPE /iwbep/s_mgw_name_value_pair, "type of it_key_tab"
+         lv_vbeln   TYPE vbeln.
+    READ TABLE it_key_tab INTO ls_key_tab WITH KEY name = 'Vbeln'. "it_key_tab = data from user in name=value"
+
+    IF ls_key_tab IS NOT INITIAL.
+      CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+        EXPORTING
+          input  = ls_key_tab-value
+        IMPORTING
+          output = lv_vbeln.
+
+      SELECT SINGLE * FROM zovbak INTO CORRESPONDING FIELDS OF er_entity WHERE vbeln = lv_vbeln."er_entity used to response the data collected from logic to exeneral source"
+
+      ENDIF.
+
+
+
+
+
+    ENDMETHOD.

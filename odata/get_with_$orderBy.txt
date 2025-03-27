@@ -1,0 +1,17 @@
+  method SOHEADERSET_GET_ENTITYSET.
+
+    SELECT * FROM zovbak INTO CORRESPONDING FIELDS OF TABLE et_entityset. "et_entityset is an signature to export a table"
+
+   call method /IWBEP/CL_MGW_DATA_UTIL=>orderby
+     EXPORTING
+       it_order =  IT_ORDER              " the sorting order
+     CHANGING
+       ct_data  = et_entityset
+     .
+  endmethod.
+
+
+
+*--------NOT PART OF CODE URI FOR THE END POINT-------------------
+
+*URI = /sap/opu/odata/SAP/ZKODATA2_SRV/SOHEADERSet?$orderby=Netwr desc

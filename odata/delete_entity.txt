@@ -1,0 +1,10 @@
+  method SOHEADERSET_DELETE_ENTITY.
+
+   read table it_key_tab into data(gs_it_tab) with key name = 'Vbeln'.
+
+    if gs_it_tab-value is not INITIAL.
+      data lv_vbeln type vbeln.
+      lv_vbeln = gs_it_tab-value.
+      DELETE from zovbak where vbeln = lv_vbeln.
+    ENDIF.
+  endmethod.

@@ -1,0 +1,11 @@
+  method SOHEADERSET_GET_ENTITYSET.
+
+    SELECT * FROM zovbak INTO CORRESPONDING FIELDS OF TABLE et_entityset. "et_entityset is an signature to export a table"
+
+          
+      if io_tech_request_context->has_inlinecount( ) = abap_true. "io_request_context is statucture that hold metadata passed through the request "
+        DESCRIBE TABLE et_entityset lines es_response_context-inlinecount.  "this returns the number of rows in the table DESCRIBE TABLE <table name> lines <varibale>"
+      else.
+         clear:ES_RESPONSE_CONTEXT-inlinecount."es_response_context is statucture that hold metadata pass along with response "
+      endif.
+  endmethod.

@@ -1,0 +1,18 @@
+  METHOD soheaderset_update_entity.
+    DATA: wa_er_entity TYPE zcl_zkodata1_mpc=>ts_soheader,
+          gs_zovbak    TYPE zovbak.
+
+    TRY.
+        CALL METHOD io_data_provider->read_entry_data
+          IMPORTING
+            es_data = wa_er_entity.
+        IF wa_er_entity-vbeln IS NOT INITIAL.
+          MOVE-CORRESPONDING wa_er_entity TO gs_zovbak.
+          MODIFY zovbak FROM gs_zovbak.
+          gs_zovbak-remark = 'record modified'.
+          MOVE-CORRESPONDING gs_zovbak TO er_entity.
+
+        ENDIF.
+      CATCH /iwbep/cx_mgw_tech_exception.
+    ENDTRY.
+  ENDMETHOD.

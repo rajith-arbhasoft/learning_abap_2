@@ -1,0 +1,5 @@
+  METHOD soheaderset_get_entityset.
+
+    SELECT * FROM zovbak INTO CORRESPONDING FIELDS OF TABLE et_entityset. "et_entityset is an signature to export a table"
+
+  ENDMETHOD.

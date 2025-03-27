@@ -1,0 +1,10 @@
+REPORT ZR1030AM_FIRST_PROGRAM.
+
+PARAMETERS: p_var1 TYPE char5,
+            p_var2 TYPE char5.
+
+DATA lv_result TYPE char10.
+
+lv_result = p_var1 + p_var2.
+CONDENSE lv_result. "removes the leading space in result"
+write: 'result is ', lv_result.

@@ -1,0 +1,63 @@
+  METHOD soheaderset_get_entity.
+
+    DATA:ls_key_tab TYPE /iwbep/s_mgw_name_value_pair, "type of it_key_tab"
+         lv_vbeln   TYPE vbeln,
+         ls_zovbak type zovbak.
+    READ TABLE it_key_tab INTO ls_key_tab WITH KEY name = 'Vbeln'. "it_key_tab = data from user in name=value"
+
+    IF ls_key_tab IS NOT INITIAL.
+      CALL FUNCTION 'CONVERSION_EXIT_ALPHA_INPUT'
+        EXPORTING
+          input  = ls_key_tab-value
+        IMPORTING
+          output = lv_vbeln.
+
+      SELECT SINGLE * FROM zovbak INTO CORRESPONDING FIELDS OF ls_zovbak WHERE vbeln = lv_vbeln."er_entity used to response the data collected from logic to exeneral source"
+
+    ENDIF.
+
+    if ls_zovbak is INITIAL.
+
+      data:lo_message_container type REF TO /iwbep/if_message_container, "This is an interface in SAP Gateway (OData framework). It is used to handle and store messages (errors, warnings, and information messages) during OData processing."
+            lv_msg_text type bapi_msg.
+
+      lo_message_container = mo_context->get_message_container( ). "mo_context is typically an instance attribute of a DPC (Data Provider Class) or DPC_EXT (Extended Data Provider Class) in an SAP OData service."
+      lv_msg_text = 'NO sales order found !'.
+
+      call METHOD lo_message_container->add_message_text_only
+        EXPORTING
+          iv_msg_type               = 'E'                " Message Type - defined by GCS_MESSAGE_TYPE
+          iv_msg_text               =  lv_msg_text                " Message Text
+*          iv_error_category         =                  " Error category - defined by GCS_ERROR_CATEGORY
+*          iv_is_leading_message     = abap_true        " Flags this message as the leading error message
+*          iv_entity_type            =                  " Entity type/name
+*          it_key_tab                =                  " Entity key as name-value pair
+*          iv_add_to_response_header = abap_false       " Flag for adding or not the message to the response header
+*          iv_message_target         =                  " Target (reference) (e.g. Property ID) of a message
+*          it_message_target         =                  " Table of targets in addition to the message target
+*          iv_omit_target            = abap_false       " Set to TRUE if message has no target
+*          iv_is_transition_message  = abap_false       " Is transition message?
+*          iv_content_id             =                  " ContentID Value
+        .
+
+      raise EXCEPTION type /iwbep/cx_mgw_busi_exception
+        EXPORTING
+*          textid                 =
+*          previous               =
+         message_container = lo_message_container
+*          http_status_code       =
+*          http_header_parameters =
+*          sap_note_id            =
+*          msg_code               =
+*          exception_category     =
+*          entity_type            =
+*          message                =
+*          message_unlimited      =
+*          filter_param           =
+*          operation_no           =
+      .
+      else.
+        ER_ENTITY = ls_zovbak.
+    ENDIF.
+
+  ENDMETHOD.

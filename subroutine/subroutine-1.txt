@@ -1,0 +1,40 @@
+*&---------------------------------------------------------------------*
+*& Report ZRSUBROUTINE2
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZRSUBROUTINE2.
+
+data:lv_output type numc3.
+
+PARAMETERS: p_input1 type numc2,
+            p_input2 type numc2.
+
+PERFORM add using p_input1 p_input2 CHANGING lv_output.
+write lv_output.
+*&---------------------------------------------------------------------*
+*& Form add
+*&---------------------------------------------------------------------*
+*& text
+*&---------------------------------------------------------------------*
+*& -->  p1        text
+*& <--  p2        text
+*&---------------------------------------------------------------------*
+FORM add using pv_input1 type numc2 "this is an internal subroutine"
+               pv_input2 type numc2
+        changing pv_output type numc3.
+  pv_output = pv_input1 + pv_input2.
+
+ENDFORM.
+
+
+REPORT ZRSUBROUTINE3.
+
+
+data:lv_output type numc3.
+
+PARAMETERS: p_input1 type numc2,
+            p_input2 type numc2.  
+
+PERFORM add(ZRSUBROUTINE2) using p_input1 p_input2 CHANGING lv_output if found. "external subroutine method-1"
+PERFORM add in PROGRAM ZRSUBROUTINE2 using p_input1 p_input2 CHANGING lv_output if found. "method-2"

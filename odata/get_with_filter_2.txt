@@ -1,0 +1,17 @@
+*method		using class				using manual way
+*Ease of Use	Easier, no manual coding required	More effort, needs custom logic
+*Performance	Good for small/medium datasets	Better for large datasets (if done at DB level)
+*OData Compatibility	Works seamlessly with $filter	Needs manual implementation
+*Complex Logic	Not supported	Supports advanced conditions
+*Additional Data Checks	Not possible	Possible
+*Best Use Case	When $filter is enough	When custom filtering logic is needed
+
+    SELECT * FROM zovbak INTO CORRESPONDING FIELDS OF TABLE et_entityset. "et_entityset is an signature to export a table"
+
+      
+            CALL METHOD /IWBEP/CL_MGW_DATA_UTIL=>filtering
+        EXPORTING
+          it_select_options =  it_filter_select_options               " table of select options
+        CHANGING
+          ct_data           = et_entityset
+        .

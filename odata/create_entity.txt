@@ -1,0 +1,26 @@
+  method SOHEADERSET_CREATE_ENTITY.
+
+    data: wa_er_entity type ZCL_ZKODATA1_MPC=>TS_SOHEADER,
+          gs_zovbak type zovbak.
+
+*for method io_data_provider goto pattern -> abap object patterns-> give below details
+* instance = IO_DATA_PROVIDER
+* interface = /IWBEP/IF_MGW_ENTRY_PROVIDER
+* method = read_entry_data
+
+    TRY.
+    CALL METHOD io_data_provider->read_entry_data
+      IMPORTING
+        es_data = wa_er_entity.
+
+        if wa_er_entity-vbeln is not INITIAL.
+          MOVE-CORRESPONDING wa_er_entity to gs_zovbak.
+          MODIFY zovbak from gs_zovbak.
+          MOVE-CORRESPONDING wa_er_entity to er_entity.
+          er_entity-remark = 'record has been created !'.
+        endif.
+      CATCH /iwbep/cx_mgw_tech_exception.
+    ENDTRY.
+
+
+  endmethod.

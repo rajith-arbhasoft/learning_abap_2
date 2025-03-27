@@ -1,0 +1,48 @@
+*&---------------------------------------------------------------------*
+*& Report ZRSUBROUTINE2
+*&---------------------------------------------------------------------*
+*&
+*&---------------------------------------------------------------------*
+REPORT ZRSUBROUTINE2.
+
+types: BEGIN OF ty_student,
+    std_id type char5,
+    std_name type char10,
+    std_age type numc2,
+  end of ty_student.
+
+data: itab type STANDARD TABLE OF ty_student,
+       wa type ty_student.
+
+
+PERFORM sub_insert_data USING '101' 'rajith' '12' changing itab.
+PERFORM sub_insert_data USING '101' 'rajith' '12' changing itab.
+PERFORM sub_insert_data USING '101' 'rajith' '12' changing itab.
+
+ loop at itab into wa.
+   write:/ wa-std_id,wa-std_name,wa-std_age.
+ ENDLOOP.
+*&---------------------------------------------------------------------*
+*& Form sub_insert_data
+*&---------------------------------------------------------------------*
+*& text
+*&---------------------------------------------------------------------*
+*&      --> PV_ID
+*&      --> TYPE
+*&      --> CHAR5
+*&      --> PV_NAME
+*&      --> TYPE
+*&      --> STRING
+*&      --> PV_AGE
+*&      --> TYPE
+*&      --> NUMC2
+*&      <-- PV_ITAB
+*&---------------------------------------------------------------------*
+FORM sub_insert_data  USING     pv_id type char5
+                                pv_name type char10
+                                pv_age type numc2
+                      CHANGING pv_itab type ZRSUBSTDTB. "is an global table using global structure other wise it show errors and you should not enhance it (structure)"
+  data: temp_wa type ty_student.
+  temp_wa-std_age = pv_age.
+  temp_wa-std_id = pv_id.
+  temp_wa-std_name = pv_name.
